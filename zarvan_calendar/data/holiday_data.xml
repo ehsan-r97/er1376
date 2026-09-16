@@ -21,8 +21,7 @@
             <field name="jalali_month">1</field>
             <field name="jalali_day">1</field>
             <field name="holiday_type">fixed</field>
-            <field name="is_national">True</field>
-            <field name="active">True</field>
+            <field name="is_active">True</field>
         </record>
         
         <record id="holiday_nowruz_2" model="jalaali.holiday">
@@ -30,8 +29,7 @@
             <field name="jalali_month">1</field>
             <field name="jalali_day">2</field>
             <field name="holiday_type">fixed</field>
-            <field name="is_national">True</field>
-            <field name="active">True</field>
+            <field name="is_active">True</field>
         </record>
         
         <record id="holiday_nowruz_3" model="jalaali.holiday">
@@ -39,8 +37,7 @@
             <field name="jalali_month">1</field>
             <field name="jalali_day">3</field>
             <field name="holiday_type">fixed</field>
-            <field name="is_national">True</field>
-            <field name="active">True</field>
+            <field name="is_active">True</field>
         </record>
         
         <record id="holiday_nowruz_4" model="jalaali.holiday">
@@ -48,8 +45,7 @@
             <field name="jalali_month">1</field>
             <field name="jalali_day">4</field>
             <field name="holiday_type">fixed</field>
-            <field name="is_national">True</field>
-            <field name="active">True</field>
+            <field name="is_active">True</field>
         </record>
 
         <!-- 13th Day of Nature (Sizdah Bedar) -->
@@ -58,8 +54,7 @@
             <field name="jalali_month">1</field>
             <field name="jalali_day">13</field>
             <field name="holiday_type">fixed</field>
-            <field name="is_national">True</field>
-            <field name="active">True</field>
+            <field name="is_active">True</field>
         </record>
 
         <!-- Imam Khomeini Death (14 Khordad) -->
@@ -68,8 +63,7 @@
             <field name="jalali_month">3</field>
             <field name="jalali_day">14</field>
             <field name="holiday_type">fixed</field>
-            <field name="is_national">True</field>
-            <field name="active">True</field>
+            <field name="is_active">True</field>
         </record>
 
         <!-- Khordad Uprising (15 Khordad) -->
@@ -78,8 +72,7 @@
             <field name="jalali_month">3</field>
             <field name="jalali_day">15</field>
             <field name="holiday_type">fixed</field>
-            <field name="is_national">True</field>
-            <field name="active">True</field>
+            <field name="is_active">True</field>
         </record>
 
         <!-- Martyrdom of Dr. Beheshti (7 Tir) -->
@@ -88,8 +81,7 @@
             <field name="jalali_month">4</field>
             <field name="jalali_day">7</field>
             <field name="holiday_type">fixed</field>
-            <field name="is_national">True</field>
-            <field name="active">True</field>
+            <field name="is_active">True</field>
         </record>
 
         <!-- Student Day (16 Azar) -->
@@ -98,8 +90,7 @@
             <field name="jalali_month">9</field>
             <field name="jalali_day">16</field>
             <field name="holiday_type">fixed</field>
-            <field name="is_national">True</field>
-            <field name="active">True</field>
+            <field name="is_active">True</field>
         </record>
 
         <!-- Revolution Day (22 Bahman) -->
@@ -108,8 +99,7 @@
             <field name="jalali_month">11</field>
             <field name="jalali_day">22</field>
             <field name="holiday_type">fixed</field>
-            <field name="is_national">True</field>
-            <field name="active">True</field>
+            <field name="is_active">True</field>
         </record>
 
         <!-- Oil Nationalization (29 Esfand) -->
@@ -118,8 +108,7 @@
             <field name="jalali_month">12</field>
             <field name="jalali_day">29</field>
             <field name="holiday_type">fixed</field>
-            <field name="is_national">True</field>
-            <field name="active">True</field>
+            <field name="is_active">True</field>
         </record>
 
         <!-- ======================= -->
@@ -133,8 +122,7 @@
             <field name="jalali_month">10</field>
             <field name="jalali_day">8</field>
             <field name="holiday_type">lunar</field>
-            <field name="is_national">True</field>
-            <field name="active">True</field>
+            <field name="is_active">True</field>
         </record>
 
         <!-- Imam Reza Martyrdom 1404: ~30 Dey 1404 -->
@@ -144,8 +132,7 @@
             <field name="jalali_month">10</field>
             <field name="jalali_day">30</field>
             <field name="holiday_type">lunar</field>
-            <field name="is_national">True</field>
-            <field name="active">True</field>
+            <field name="is_active">True</field>
         </record>
 
         <!-- Fatimiyyah Start 1404: ~15 Bahman 1404 -->
@@ -155,8 +142,7 @@
             <field name="jalali_month">11</field>
             <field name="jalali_day">15</field>
             <field name="holiday_type">lunar</field>
-            <field name="is_national">True</field>
-            <field name="active">True</field>
+            <field name="is_active">True</field>
         </record>
 
         <!-- Ashura 1404: ~17 Shahrivar 1404 -->
@@ -166,8 +152,7 @@
             <field name="jalali_month">6</field>
             <field name="jalali_day">17</field>
             <field name="holiday_type">lunar</field>
-            <field name="is_national">True</field>
-            <field name="active">True</field>
+            <field name="is_active">True</field>
         </record>
 
         <!-- Arbaeen 1404: ~7 Mehr 1404 -->
@@ -177,8 +162,7 @@
             <field name="jalali_month">7</field>
             <field name="jalali_day">7</field>
             <field name="holiday_type">lunar</field>
-            <field name="is_national">True</field>
-            <field name="active">True</field>
+            <field name="is_active">True</field>
         </record>
 
         <!-- ======================= -->
@@ -192,8 +176,7 @@
             <field name="jalali_month">9</field>
             <field name="jalali_day">28</field>
             <field name="holiday_type">lunar</field>
-            <field name="is_national">True</field>
-            <field name="active">True</field>
+            <field name="is_active">True</field>
         </record>
 
         <!-- Imam Reza Martyrdom 1405: ~20 Dey 1405 -->
@@ -203,8 +186,7 @@
             <field name="jalali_month">10</field>
             <field name="jalali_day">20</field>
             <field name="holiday_type">lunar</field>
-            <field name="is_national">True</field>
-            <field name="active">True</field>
+            <field name="is_active">True</field>
         </record>
 
         <!-- Fatimiyyah Start 1405: ~5 Bahman 1405 -->
@@ -214,8 +196,7 @@
             <field name="jalali_month">11</field>
             <field name="jalali_day">5</field>
             <field name="holiday_type">lunar</field>
-            <field name="is_national">True</field>
-            <field name="active">True</field>
+            <field name="is_active">True</field>
         </record>
 
         <!-- Ashura 1405: ~7 Shahrivar 1405 -->
@@ -225,8 +206,7 @@
             <field name="jalali_month">6</field>
             <field name="jalali_day">7</field>
             <field name="holiday_type">lunar</field>
-            <field name="is_national">True</field>
-            <field name="active">True</field>
+            <field name="is_active">True</field>
         </record>
 
         <!-- Arbaeen 1405: ~17 Shahrivar 1405 -->
@@ -236,8 +216,7 @@
             <field name="jalali_month">6</field>
             <field name="jalali_day">27</field>
             <field name="holiday_type">lunar</field>
-            <field name="is_national">True</field>
-            <field name="active">True</field>
+            <field name="is_active">True</field>
         </record>
 
         <!-- ======================= -->
@@ -251,8 +230,7 @@
             <field name="jalali_month">9</field>
             <field name="jalali_day">18</field>
             <field name="holiday_type">lunar</field>
-            <field name="is_national">True</field>
-            <field name="active">True</field>
+            <field name="is_active">True</field>
         </record>
 
         <!-- Ashura 1406: ~27 Mordad 1406 (Approximate) -->
@@ -262,8 +240,7 @@
             <field name="jalali_month">5</field>
             <field name="jalali_day">27</field>
             <field name="holiday_type">lunar</field>
-            <field name="is_national">True</field>
-            <field name="active">True</field>
+            <field name="is_active">True</field>
         </record>
 
     </data>
