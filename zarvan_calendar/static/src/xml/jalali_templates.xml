@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- Jalali Date Picker Template -->
+    <t t-name="zarvan_calendar.JalaliDatePicker">
+        <div class="zarvan-date-picker" t-on-click="openPicker" t-outside-click="closePicker">
+            <input type="text" 
+                   class="zarvan-date-picker-input"
+                   t-att-value="displayValue"
+                   t-att-placeholder="props.placeholder || 'Select date'"
+                   t-att-readonly="props.readonly"
+                   aria-label="Jalali date picker"/>
+            <span class="zarvan-date-picker-icon">📅</span>
+            
+            <div t-if="state.isOpen" class="zarvan-picker-dropdown">
+                <div class="picker-header">
+                    <button class="picker-nav-btn" t-on-click="() => changeMonth(-1)" aria-label="Previous month">◀</button>
+                    <span class="picker-month-year">
+                        <t t-esc="state.persianMonths[state.currentMonth - 1]"/>
+                        <t t-esc="state.currentYear"/>
+                    </span>
+                    <button class="picker-nav-btn" t-on-click="() => changeMonth(1)" aria-label="Next month">▶</button>
+                </div>
+                
+                <div class="picker-calendar">
+                    <t t-foreach="state.persianWeekdays" t-as="weekday" t-key="weekday_index">
+                        <div class="picker-weekday"><t t-esc="weekday"/></div>
+                    </t>
+                    
+                    <t t-foreach="generateCalendarDays()" t-as="day" t-key="day_index">
+                        <div t-if="day === null" class="picker-day picker-day-empty"></div>
+                        <div t-else=""
+                             class="picker-day"
+                             t-att-class="{
+                                 'picker-day-selected': day === state.selectedDay,
+                                 'picker-day-today': day === new Date().getDate()
+                             }"
+                             t-on-click="() => selectDay(day)"
+                             t-esc="day"
+                             role="button"
+                             tabindex="0"/>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <!-- Jalali Status Bar Template -->
+    <t t-name="zarvan_calendar.JalaliStatus">
+        <div class="zarvan-status-bar" t-if="!state.isLoading">
+            <span class="zarvan-current-date">Today:</span>
+            <span class="zarvan-jalali-date">
+                <t t-esc="state.jalaliWeekday"/>، 
+                <t t-esc="state.jalaliDate"/>
+            </span>
+        </div>
+        <div t-else="" class="zarvan-loading">Loading...</div>
+    </t>
+
+    <!-- Holiday Badge Template -->
+    <t t-name="zarvan_calendar.HolidayBadge">
+        <span t-if="!state.isLoading and state.isHoliday" 
+              class="zarvan-holiday-badge" 
+              t-att-class="badgeClass"
+              t-att-title="state.holidayName">
+            🎉 <t t-esc="state.holidayName"/>
+        </span>
+    </t>
+
+</templates>

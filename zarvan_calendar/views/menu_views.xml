@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Main Menu for Persian Calendar -->
+        <menuitem id="menu_jalaali_root"
+                  name="Persian Calendar"
+                  web_icon="zarvan_calendar,static/description/icon.png"
+                  sequence="90"/>
+
+        <!-- Configuration Submenu -->
+        <menuitem id="menu_jalaali_configuration"
+                  name="Configuration"
+                  parent="menu_jalaali_root"
+                  sequence="100"/>
+
+        <!-- Holidays Menu -->
+        <menuitem id="menu_jalaali_holidays"
+                  name="Holidays"
+                  parent="menu_jalaali_configuration"
+                  action="jalaali_holiday_action"
+                  sequence="10"/>
+
+        <!-- Import Wizard Menu -->
+        <menuitem id="menu_jalaali_import"
+                  name="Import Holidays"
+                  parent="menu_jalaali_configuration"
+                  action="jalaali_import_wizard_action"
+                  sequence="20"/>
+
+        <!-- Settings (shown in Settings app via company/user forms) -->
+        <menuitem id="menu_jalaali_settings"
+                  name="Settings"
+                  parent="menu_jalaali_configuration"
+                  sequence="30"
+                  groups="base.group_system"/>
+    </data>
+</odoo>

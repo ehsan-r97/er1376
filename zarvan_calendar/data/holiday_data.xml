@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- 
+            PRODUCTION-READY HOLIDAY DATA STRATEGY:
+            ========================================
+            1. FIXED HOLIDAYS: No 'jalali_year' set → Apply EVERY year automatically
+            2. LUNAR HOLIDAYS: Specific 'jalali_year' set → Must be updated annually
+            
+            CURRENT STATUS: Updated for 1404 and 1405 (Current year is 1405)
+            LAST UPDATED: Odoo 19 Production Release
+        -->
+
+        <!-- ======================= -->
+        <!-- FIXED HOLIDAYS (Permanent - Every Year) -->
+        <!-- ======================= -->
+
+        <!-- Nowruz (New Year) - 4 Days -->
+        <record id="holiday_nowruz_1" model="jalaali.holiday">
+            <field name="name">آغاز سال نو (نوروز)</field>
+            <field name="jalali_month">1</field>
+            <field name="jalali_day">1</field>
+            <field name="holiday_type">fixed</field>
+            <field name="is_national">True</field>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="holiday_nowruz_2" model="jalaali.holiday">
+            <field name="name">عید نوروز (روز دوم)</field>
+            <field name="jalali_month">1</field>
+            <field name="jalali_day">2</field>
+            <field name="holiday_type">fixed</field>
+            <field name="is_national">True</field>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="holiday_nowruz_3" model="jalaali.holiday">
+            <field name="name">عید نوروز (روز سوم)</field>
+            <field name="jalali_month">1</field>
+            <field name="jalali_day">3</field>
+            <field name="holiday_type">fixed</field>
+            <field name="is_national">True</field>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="holiday_nowruz_4" model="jalaali.holiday">
+            <field name="name">عید نوروز (روز چهارم)</field>
+            <field name="jalali_month">1</field>
+            <field name="jalali_day">4</field>
+            <field name="holiday_type">fixed</field>
+            <field name="is_national">True</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- 13th Day of Nature (Sizdah Bedar) -->
+        <record id="holiday_sizdah" model="jalaali.holiday">
+            <field name="name">سیزده به در</field>
+            <field name="jalali_month">1</field>
+            <field name="jalali_day">13</field>
+            <field name="holiday_type">fixed</field>
+            <field name="is_national">True</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- Imam Khomeini Death (14 Khordad) -->
+        <record id="holiday_khomeini_death" model="jalaali.holiday">
+            <field name="name">رحلت امام خمینی (ره)</field>
+            <field name="jalali_month">3</field>
+            <field name="jalali_day">14</field>
+            <field name="holiday_type">fixed</field>
+            <field name="is_national">True</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- Khordad Uprising (15 Khordad) -->
+        <record id="holiday_khordad_uprising" model="jalaali.holiday">
+            <field name="name">قیام ۱۵ خرداد</field>
+            <field name="jalali_month">3</field>
+            <field name="jalali_day">15</field>
+            <field name="holiday_type">fixed</field>
+            <field name="is_national">True</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- Martyrdom of Dr. Beheshti (7 Tir) -->
+        <record id="holiday_beheshti" model="jalaali.holiday">
+            <field name="name">شهادت دکتر بهشتی</field>
+            <field name="jalali_month">4</field>
+            <field name="jalali_day">7</field>
+            <field name="holiday_type">fixed</field>
+            <field name="is_national">True</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- Student Day (16 Azar) -->
+        <record id="holiday_student_day" model="jalaali.holiday">
+            <field name="name">روز دانشجو (۱۶ آذر)</field>
+            <field name="jalali_month">9</field>
+            <field name="jalali_day">16</field>
+            <field name="holiday_type">fixed</field>
+            <field name="is_national">True</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- Revolution Day (22 Bahman) -->
+        <record id="holiday_revolution" model="jalaali.holiday">
+            <field name="name">پیروزی انقلاب اسلامی</field>
+            <field name="jalali_month">11</field>
+            <field name="jalali_day">22</field>
+            <field name="holiday_type">fixed</field>
+            <field name="is_national">True</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- Oil Nationalization (29 Esfand) -->
+        <record id="holiday_oil_nationalization" model="jalaali.holiday">
+            <field name="name">ملی شدن صنعت نفت</field>
+            <field name="jalali_month">12</field>
+            <field name="jalali_day">29</field>
+            <field name="holiday_type">fixed</field>
+            <field name="is_national">True</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- ======================= -->
+        <!-- LUNAR HOLIDAYS 1404 (Specific Year) -->
+        <!-- ======================= -->
+        
+        <!-- Prophet Martyrdom 1404: ~8 Dey 1404 -->
+        <record id="holiday_1404_prophet" model="jalaali.holiday">
+            <field name="name">رحلت پیامبر و شهادت امام صادق (ع) - ۱۴۰۴</field>
+            <field name="jalali_year">1404</field>
+            <field name="jalali_month">10</field>
+            <field name="jalali_day">8</field>
+            <field name="holiday_type">lunar</field>
+            <field name="is_national">True</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- Imam Reza Martyrdom 1404: ~30 Dey 1404 -->
+        <record id="holiday_1404_reza" model="jalaali.holiday">
+            <field name="name">شهادت امام رضا (ع) - ۱۴۰۴</field>
+            <field name="jalali_year">1404</field>
+            <field name="jalali_month">10</field>
+            <field name="jalali_day">30</field>
+            <field name="holiday_type">lunar</field>
+            <field name="is_national">True</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- Fatimiyyah Start 1404: ~15 Bahman 1404 -->
+        <record id="holiday_1404_fatimiyyah" model="jalaali.holiday">
+            <field name="name">ایام فاطمیه (شروع) - ۱۴۰۴</field>
+            <field name="jalali_year">1404</field>
+            <field name="jalali_month">11</field>
+            <field name="jalali_day">15</field>
+            <field name="holiday_type">lunar</field>
+            <field name="is_national">True</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- Ashura 1404: ~17 Shahrivar 1404 -->
+        <record id="holiday_1404_ashura" model="jalaali.holiday">
+            <field name="name">عاشورای حسینی - ۱۴۰۴</field>
+            <field name="jalali_year">1404</field>
+            <field name="jalali_month">6</field>
+            <field name="jalali_day">17</field>
+            <field name="holiday_type">lunar</field>
+            <field name="is_national">True</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- Arbaeen 1404: ~7 Mehr 1404 -->
+        <record id="holiday_1404_arbaeen" model="jalaali.holiday">
+            <field name="name">اربعین حسینی - ۱۴۰۴</field>
+            <field name="jalali_year">1404</field>
+            <field name="jalali_month">7</field>
+            <field name="jalali_day">7</field>
+            <field name="holiday_type">lunar</field>
+            <field name="is_national">True</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- ======================= -->
+        <!-- LUNAR HOLIDAYS 1405 (CURRENT YEAR) -->
+        <!-- ======================= -->
+
+        <!-- Prophet Martyrdom 1405: ~28 Azar 1405 -->
+        <record id="holiday_1405_prophet" model="jalaali.holiday">
+            <field name="name">رحلت پیامبر و شهادت امام صادق (ع) - ۱۴۰۵</field>
+            <field name="jalali_year">1405</field>
+            <field name="jalali_month">9</field>
+            <field name="jalali_day">28</field>
+            <field name="holiday_type">lunar</field>
+            <field name="is_national">True</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- Imam Reza Martyrdom 1405: ~20 Dey 1405 -->
+        <record id="holiday_1405_reza" model="jalaali.holiday">
+            <field name="name">شهادت امام رضا (ع) - ۱۴۰۵</field>
+            <field name="jalali_year">1405</field>
+            <field name="jalali_month">10</field>
+            <field name="jalali_day">20</field>
+            <field name="holiday_type">lunar</field>
+            <field name="is_national">True</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- Fatimiyyah Start 1405: ~5 Bahman 1405 -->
+        <record id="holiday_1405_fatimiyyah" model="jalaali.holiday">
+            <field name="name">ایام فاطمیه (شروع) - ۱۴۰۵</field>
+            <field name="jalali_year">1405</field>
+            <field name="jalali_month">11</field>
+            <field name="jalali_day">5</field>
+            <field name="holiday_type">lunar</field>
+            <field name="is_national">True</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- Ashura 1405: ~7 Shahrivar 1405 -->
+        <record id="holiday_1405_ashura" model="jalaali.holiday">
+            <field name="name">عاشورای حسینی - ۱۴۰۵</field>
+            <field name="jalali_year">1405</field>
+            <field name="jalali_month">6</field>
+            <field name="jalali_day">7</field>
+            <field name="holiday_type">lunar</field>
+            <field name="is_national">True</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- Arbaeen 1405: ~17 Shahrivar 1405 -->
+        <record id="holiday_1405_arbaeen" model="jalaali.holiday">
+            <field name="name">اربعین حسینی - ۱۴۰۵</field>
+            <field name="jalali_year">1405</field>
+            <field name="jalali_month">6</field>
+            <field name="jalali_day">27</field>
+            <field name="holiday_type">lunar</field>
+            <field name="is_national">True</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- ======================= -->
+        <!-- LUNAR HOLIDAYS 1406 (NEXT YEAR - PRELOADED) -->
+        <!-- ======================= -->
+
+        <!-- Prophet Martyrdom 1406: ~18 Azar 1406 (Approximate) -->
+        <record id="holiday_1406_prophet" model="jalaali.holiday">
+            <field name="name">رحلت پیامبر و شهادت امام صادق (ع) - ۱۴۰۶ (تقریبی)</field>
+            <field name="jalali_year">1406</field>
+            <field name="jalali_month">9</field>
+            <field name="jalali_day">18</field>
+            <field name="holiday_type">lunar</field>
+            <field name="is_national">True</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- Ashura 1406: ~27 Mordad 1406 (Approximate) -->
+        <record id="holiday_1406_ashura" model="jalaali.holiday">
+            <field name="name">عاشورای حسینی - ۱۴۰۶ (تقریبی)</field>
+            <field name="jalali_year">1406</field>
+            <field name="jalali_month">5</field>
+            <field name="jalali_day">27</field>
+            <field name="holiday_type">lunar</field>
+            <field name="is_national">True</field>
+            <field name="active">True</field>
+        </record>
+
+    </data>
+</odoo>
