@@ -1,46 +1,145 @@
-```
-# Compiled Python files
-*.pyc
+# Examples of common gitignore rules for Python projects
+
+# Byte-compiled / optimized / DLL files
 __pycache__/
+*.py[cod]
+*$py.class
 
-# Dependencies
-venv/
-.venv/
-.env
-.env.local
-*.env.*
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
 
-# Odoo specific
-original_repo/
-temp_odoo_modules/
+# PyInstaller
+*.manifest
+*.spec
 
-# Logs
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
 *.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
 
-# Editor/IDE
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# PEP 582
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# IDE
 .vscode/
 .idea/
-*.swp
-*.swo
-*.tmp
-
-# Coverage reports
-.coverage
-coverage/
-htmlcov/
 
 # OS generated files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
+Thumbs.db:encryptable
+*:Zone.Identifier
 
-# Build artifacts
-build/
-dist/
-*.egg-info/
+# Log files
+*.log
 
-# Testing
-.pytest_cache/
-.mypy_cache/
+# Temporary files
+*.tmp
+*.temp
+*~
 
 # Compressed files
 *.zip
@@ -61,4 +160,64 @@ dist/
 *.Z
 *.lz
 *.lzo
-```
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.tar.zst
+
+# Sensitive files
+config/secrets.yml
+secrets.json
+
+# Coverage
+coverage/
+.coverage.*
+
+# Git submodules
+submodules/
+
+# Build artifacts
+*.o
+*.obj
+*.a
+*.so
+*.dll
+*.exe
+*.out
+*.pyd
+
+# C extensions
+*.c
+*.h
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Node modules
+node_modules/
+
+# Gradle
+.gradle/
+build/
+
+# Maven
+target/
+
+# Temporary editor files
+*.swp
+*.swo
+
+# Environment specific settings
+.env.local
+.env.dev
+.env.production
+.env.staging
+.env.test
+.env.backup
+.env.save
+.env.tmp
+.env.swp
+.env.swo
+.env~

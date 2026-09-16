@@ -8,7 +8,6 @@ _logger = logging.getLogger(__name__)
 
 try:
     import jdatetime
-    from jdatetime import JalaliDateConverter
 except ImportError:
     _logger.error("jdatetime library not installed. Run: pip install jdatetime>=4.1.0")
     raise
