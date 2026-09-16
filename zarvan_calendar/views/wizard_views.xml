@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Import Wizard Form View -->
+        <record id="jalaali_import_wizard_view_form" model="ir.ui.view">
+            <field name="name">jalaali.import.wizard.form</field>
+            <field name="model">jalaali.import.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Import Holidays">
+                    <sheet>
+                        <div class="alert alert-info" role="alert" attrs="{'invisible': [('state', '!=', 'draft')]}">
+                            <strong>Step 1:</strong> Upload your CSV or Excel file with holiday data.
+                            <br/>
+                            Required columns: name, year, month, day
+                        </div>
+                        
+                        <group attrs="{'invisible': [('state', '=', 'done')]}">
+                            <group string="File Upload">
+                                <field name="file_data"/>
+                                <field name="filename" invisible="1"/>
+                            </group>
+                            <group string="File Options">
+                                <field name="delimiter"/>
+                                <field name="has_header"/>
+                                <field name="encoding"/>
+                            </group>
+                        </group>
+
+                        <group attrs="{'invisible': [('state', '!=', 'preview')]}">
+                            <group string="Date Detection">
+                                <field name="date_format_mode"/>
+                            </group>
+                            <group string="Import Options">
+                                <field name="force_import"/>
+                                <field name="create_company_specific"/>
+                                <field name="company_id" attrs="{'invisible': [('create_company_specific', '=', False)], 'required': [('create_company_specific', '=', True)]}"/>
+                                <field name="holiday_type" attrs="{'invisible': [('create_company_specific', '=', True)]}"/>
+                            </group>
+                        </group>
+
+                        <separator string="Preview" attrs="{'invisible': [('state', '!=', 'preview')]}"/>
+                        <field name="preview_data" readonly="1" colspan="2" attrs="{'invisible': [('state', '!=', 'preview')]}"/>
+
+                        <group attrs="{'invisible': [('state', '!=', 'preview')]}">
+                            <group string="Statistics">
+                                <field name="total_rows"/>
+                                <field name="valid_rows"/>
+                                <field name="invalid_rows"/>
+                                <field name="duplicate_rows"/>
+                            </group>
+                        </group>
+
+                        <separator string="Import Log" attrs="{'invisible': [('state', '!=', 'done')]}"/>
+                        <field name="import_log" readonly="1" colspan="2" attrs="{'invisible': [('state', '!=', 'done')]}"/>
+
+                        <field name="state" invisible="1"/>
+                    </sheet>
+
+                    <footer attrs="{'invisible': [('state', '=', 'done')]}">
+                        <button string="Preview" 
+                                type="object" 
+                                name="_onchange_file_data" 
+                                class="btn-primary"
+                                attrs="{'invisible': [('state', '!=', 'draft')]}"
+                                confirm="This will parse the file and show a preview. Continue?"/>
+                        <button string="Import" 
+                                type="object" 
+                                name="action_import" 
+                                class="btn-success"
+                                attrs="{'invisible': [('state', '!=', 'preview')]}"
+                                confirm="Proceed with importing holidays?"/>
+                        <button string="Cancel" 
+                                type="object" 
+                                name="action_cancel" 
+                                class="btn-secondary"/>
+                    </footer>
+                    
+                    <footer attrs="{'invisible': [('state', '!=', 'done')]}">
+                        <button string="Close" 
+                                type="object" 
+                                name="action_cancel" 
+                                class="btn-primary"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Import Wizard Action -->
+        <record id="jalaali_import_wizard_action" model="ir.actions.act_window">
+            <field name="name">Import Holidays</field>
+            <field name="res_model">jalaali.import.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Import holidays from CSV or Excel
+                </p>
+                <p>
+                    Upload a file with columns: name, year, month, day.
+                    The wizard will auto-detect Jalali vs Gregorian dates.
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

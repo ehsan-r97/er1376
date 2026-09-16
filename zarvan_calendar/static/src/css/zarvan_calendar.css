@@ -1,0 +1,350 @@
+/**
+ * Zarvan Persian Calendar - Production Styles
+ * 
+ * Modern, responsive CSS for Jalali calendar components.
+ * Includes RTL support, dark mode compatibility, and accessibility features.
+ */
+
+/* ============================================
+   Base Variables
+   ============================================ */
+:root {
+    --zarvan-primary: #3b82f6;
+    --zarvan-primary-hover: #2563eb;
+    --zarvan-success: #10b981;
+    --zarvan-warning: #f59e0b;
+    --zarvan-danger: #ef4444;
+    --zarvan-national: #dc2626;
+    --zarvan-lunar: #7c3aed;
+    --zarvan-fixed: #059669;
+    --zarvan-regional: #ea580c;
+    
+    --zarvan-bg-light: #ffffff;
+    --zarvan-bg-dark: #1f2937;
+    --zarvan-text-light: #1f2937;
+    --zarvan-text-dark: #f9fafb;
+    --zarvan-border: #e5e7eb;
+    
+    --zarvan-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --zarvan-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --zarvan-radius: 8px;
+    --zarvan-radius-full: 9999px;
+}
+
+/* Dark mode support */
+.o_dark_mode :root,
+[data-bs-theme="dark"] :root {
+    --zarvan-bg-light: #1f2937;
+    --zarvan-bg-dark: #111827;
+    --zarvan-text-light: #f9fafb;
+    --zarvan-text-dark: #1f2937;
+    --zarvan-border: #374151;
+}
+
+/* ============================================
+   Date Picker Widget
+   ============================================ */
+.zarvan-date-picker {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    font-family: inherit;
+}
+
+.zarvan-date-picker-input {
+    width: 100%;
+    padding: 0.5rem 2.5rem 0.5rem 0.75rem;
+    border: 1px solid var(--zarvan-border);
+    border-radius: var(--zarvan-radius);
+    background-color: var(--zarvan-bg-light);
+    color: var(--zarvan-text-light);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.zarvan-date-picker-input:hover {
+    border-color: var(--zarvan-primary);
+}
+
+.zarvan-date-picker-input:focus {
+    outline: none;
+    border-color: var(--zarvan-primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.zarvan-date-picker-icon {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6b7280;
+    pointer-events: none;
+}
+
+/* Picker Dropdown */
+.zarvan-picker-dropdown {
+    position: absolute;
+    z-index: 1000;
+    min-width: 280px;
+    padding: 1rem;
+    background-color: var(--zarvan-bg-light);
+    border: 1px solid var(--zarvan-border);
+    border-radius: var(--zarvan-radius);
+    box-shadow: var(--zarvan-shadow-lg);
+    direction: rtl;
+}
+
+.picker-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--zarvan-border);
+}
+
+.picker-month-year {
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--zarvan-text-light);
+}
+
+.picker-nav-btn {
+    padding: 0.25rem 0.5rem;
+    border: 1px solid var(--zarvan-border);
+    border-radius: var(--zarvan-radius);
+    background-color: var(--zarvan-bg-light);
+    color: var(--zarvan-text-light);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.picker-nav-btn:hover {
+    background-color: var(--zarvan-primary);
+    border-color: var(--zarvan-primary);
+    color: white;
+}
+
+/* Calendar Grid */
+.picker-calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.25rem;
+}
+
+.picker-weekday {
+    padding: 0.5rem;
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #6b7280;
+}
+
+.picker-day {
+    padding: 0.5rem;
+    text-align: center;
+    font-size: 0.875rem;
+    border-radius: var(--zarvan-radius-full);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.picker-day:hover:not(.picker-day-empty) {
+    background-color: var(--zarvan-primary);
+    color: white;
+}
+
+.picker-day-selected {
+    background-color: var(--zarvan-primary);
+    color: white;
+    font-weight: 600;
+}
+
+.picker-day-today {
+    border: 2px solid var(--zarvan-primary);
+}
+
+.picker-day-empty {
+    cursor: default;
+}
+
+/* ============================================
+   Holiday Badges
+   ============================================ */
+.zarvan-holiday-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--zarvan-radius-full);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+.badge-national {
+    background-color: rgba(220, 38, 38, 0.1);
+    color: var(--zarvan-national);
+}
+
+.badge-lunar {
+    background-color: rgba(124, 58, 237, 0.1);
+    color: var(--zarvan-lunar);
+}
+
+.badge-fixed {
+    background-color: rgba(5, 150, 105, 0.1);
+    color: var(--zarvan-fixed);
+}
+
+.badge-regional {
+    background-color: rgba(234, 88, 12, 0.1);
+    color: var(--zarvan-regional);
+}
+
+/* ============================================
+   Status Bar Component
+   ============================================ */
+.zarvan-status-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: var(--zarvan-bg-light);
+    border-bottom: 1px solid var(--zarvan-border);
+}
+
+.zarvan-current-date {
+    font-size: 0.875rem;
+    color: var(--zarvan-text-light);
+}
+
+.zarvan-jalali-date {
+    font-weight: 600;
+    color: var(--zarvan-primary);
+    direction: rtl;
+}
+
+/* ============================================
+   Import Wizard
+   ============================================ */
+.zarvan-import-preview {
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 1rem;
+    background-color: var(--zarvan-bg-dark);
+    border-radius: var(--zarvan-radius);
+    font-family: monospace;
+    font-size: 0.75rem;
+    color: var(--zarvan-text-dark);
+}
+
+.zarvan-statistics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.stat-card {
+    padding: 1rem;
+    background-color: var(--zarvan-bg-light);
+    border: 1px solid var(--zarvan-border);
+    border-radius: var(--zarvan-radius);
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--zarvan-primary);
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* ============================================
+   RTL Support
+   ============================================ */
+[dir="rtl"] .zarvan-date-picker-input {
+    padding-right: 0.75rem;
+    padding-left: 2.5rem;
+}
+
+[dir="rtl"] .zarvan-date-picker-icon {
+    right: auto;
+    left: 0.75rem;
+}
+
+[dir="rtl"] .picker-header {
+    flex-direction: row-reverse;
+}
+
+/* ============================================
+   Responsive Design
+   ============================================ */
+@media (max-width: 768px) {
+    .zarvan-picker-dropdown {
+        min-width: 260px;
+        padding: 0.75rem;
+    }
+    
+    .picker-day {
+        padding: 0.375rem;
+        font-size: 0.75rem;
+    }
+    
+    .zarvan-statistics {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ============================================
+   Accessibility
+   ============================================ */
+.zarvan-date-picker-input:focus-visible,
+.picker-nav-btn:focus-visible,
+.picker-day:focus-visible {
+    outline: 2px solid var(--zarvan-primary);
+    outline-offset: 2px;
+}
+
+/* Screen reader only */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* ============================================
+   Animations
+   ============================================ */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.zarvan-picker-dropdown {
+    animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.zarvan-loading {
+    animation: pulse 1.5s ease-in-out infinite;
+}

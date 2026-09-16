@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Company Form View - Extended with Jalali Settings -->
+        <record id="res_company_view_form_jalali" model="ir.ui.view">
+            <field name="name">res.company.form.jalali</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='general_info']" position="after">
+                    <page string="Persian Calendar" name="jalali_settings">
+                        <group string="Fiscal Year Settings">
+                            <group>
+                                <field name="jalali_fiscal_year_month"/>
+                                <field name="jalali_fiscal_year_start"/>
+                            </group>
+                            <group>
+                                <p class="text-muted">
+                                    Configure the start of your fiscal year according to the Jalali calendar.
+                                    Default is Farvardin 1 (Persian New Year).
+                                </p>
+                            </group>
+                        </group>
+                        
+                        <separator string="Weekend Configuration"/>
+                        <group>
+                            <group>
+                                <field name="jalali_weekend_type"/>
+                                <field name="jalali_weekend_custom" attrs="{'invisible': [('jalali_weekend_type', '!=', 'custom')], 'required': [('jalali_weekend_type', '=', 'custom')]}"/>
+                            </group>
+                            <group>
+                                <p class="text-muted">
+                                    Select your company's weekend pattern. 
+                                    Iran standard is Thursday-Friday.
+                                </p>
+                            </group>
+                        </group>
+                        
+                        <separator string="Holiday Policies"/>
+                        <group>
+                            <field name="jalali_auto_create_holidays"/>
+                            <field name="jalali_include_lunar_holidays"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

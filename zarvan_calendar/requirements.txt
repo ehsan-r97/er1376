@@ -1,0 +1,12 @@
+# Zarvan Persian Calendar - Python Dependencies
+# Install with: pip install -r requirements.txt
+
+# Core Jalali calendar library (REQUIRED)
+jdatetime>=4.1.0
+
+# Date utilities
+python-dateutil>=2.8.2
+
+# Import wizard dependencies
+pandas>=1.5.0
+openpyxl>=3.0.10
