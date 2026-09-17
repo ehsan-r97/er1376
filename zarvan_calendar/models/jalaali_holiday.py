@@ -151,7 +151,7 @@ class JalaaliHoliday(models.Model):
     def create(self, vals_list):
         """Override create to set creator."""
         for vals in vals_list:
-            vals['created_by'] = self.env.uid
+            vals.setdefault('created_by', self.env.uid)
         return super().create(vals_list)
 
     def write(self, vals):
@@ -279,6 +279,7 @@ class JalaaliHoliday(models.Model):
                     'jalali_day': template.jalali_day,
                     'holiday_type': 'fixed',
                     'description': template.description,
+                    'is_national': template.is_national,
                 })
                 created_count += 1
         

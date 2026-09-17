@@ -11,6 +11,7 @@ Extends res.company with Jalali calendar configuration including:
 import logging
 
 from odoo import models, fields, api, _
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -80,7 +81,7 @@ class ResCompany(models.Model):
         company = self.browse(company_id) if company_id else self.env.company
         
         # Validate company exists
-        if not company:
+        if not company or not company.exists():
             raise UserError(_("Company not found."))
         
         return {
@@ -92,21 +93,24 @@ class ResCompany(models.Model):
             'include_lunar_holidays': company.jalali_include_lunar_holidays,
         }
 
-    def is_weekend(self, check_date, weekday=None):
+    @api.model
+    def is_weekend(self, check_date, weekday=None, company_id=None):
         """
-        Check if a given date/weekday is a weekend for this company.
+        Check if a given date/weekday is a weekend for a company.
         
         Args:
             check_date: Date to check (Gregorian)
             weekday: Weekday number (0=Monday, 6=Sunday). If None, computed from date.
+            company_id: Company ID (defaults to current company)
         
         Returns:
             bool: True if weekend, False otherwise
         """
         from datetime import datetime
         
-        # Guard against empty recordsets before ensure_one()
-        if not self:
+        # Get company safely
+        company = self.browse(company_id) if company_id else self.env.company
+        if not company or not company.exists():
             return False
         
         if weekday is None:
@@ -114,8 +118,7 @@ class ResCompany(models.Model):
                 check_date = datetime.strptime(check_date, '%Y-%m-%d').date()
             weekday = check_date.weekday()  # 0=Monday, 6=Sunday
         
-        self.ensure_one()
-        weekend_type = self.jalali_weekend_type
+        weekend_type = company.jalali_weekend_type
         
         if weekend_type == 'thu_fri':
             # Thursday=3, Friday=4 in Python weekday

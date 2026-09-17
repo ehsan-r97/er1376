@@ -24,7 +24,6 @@ USAGE IN OTHER MODULES:
 import logging
 import re
 from datetime import datetime, date
-from functools import lru_cache
 
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError, UserError
@@ -37,9 +36,10 @@ _DATE_PATTERN_1 = re.compile(r'^(\d{4})-(\d{2})-(\d{2})$')  # YYYY-MM-DD
 _DATE_PATTERN_2 = re.compile(r'^(\d{4})/(\d{2})/(\d{2})$')  # YYYY/MM/DD
 _DATE_PATTERN_3 = re.compile(r'^(\d{4})(\d{2})(\d{2})$')    # YYYYMMDD
 
-# Heuristic threshold: Years > 1700 are likely Jalali (1700 SH = 2321 AD, safe upper bound)
-# Years <= 1700 are treated as Gregorian to avoid misclassification
-JALALI_YEAR_THRESHOLD = 1700
+# Heuristic threshold: Years between 1300-1500 are likely Jalali (Jalali era started ~622 AD)
+# Years > 1800 are treated as Gregorian to avoid misclassification (e.g., 2025 AD should not be Jalali)
+JALALI_YEAR_THRESHOLD_MIN = 1300
+JALALI_YEAR_THRESHOLD_MAX = 1800
 
 
 class JalaaliMixin(models.AbstractModel):
@@ -68,9 +68,9 @@ class JalaaliMixin(models.AbstractModel):
         """
         return self._jalali_to_gregorian_cached(j_year, j_month, j_day)
 
-    @staticmethod
+    @api.model
     @ormcache('j_year', 'j_month', 'j_day')
-    def _jalali_to_gregorian_cached(j_year, j_month, j_day):
+    def _jalali_to_gregorian_cached(self, j_year, j_month, j_day):
         """Cached Jalali to Gregorian conversion using Odoo's ormcache."""
         try:
             import jdatetime
@@ -124,9 +124,9 @@ class JalaaliMixin(models.AbstractModel):
         """
         return self._gregorian_to_jalali_cached(g_year, g_month, g_day)
 
-    @staticmethod
+    @api.model
     @ormcache('g_year', 'g_month', 'g_day')
-    def _gregorian_to_jalali_cached(g_year, g_month, g_day):
+    def _gregorian_to_jalali_cached(self, g_year, g_month, g_day):
         """Cached Gregorian to Jalali conversion using Odoo's ormcache."""
         try:
             import jdatetime
@@ -196,8 +196,8 @@ class JalaaliMixin(models.AbstractModel):
         
         y, m, d = int(match.group(1)), int(match.group(2)), int(match.group(3))
         
-        # Determine date type using heuristic
-        is_jalali = force_jalali or (not force_gregorian and y > JALALI_YEAR_THRESHOLD)
+        # Determine date type using heuristic (Jalali years are typically 1300-1500, Gregorian > 1800)
+        is_jalali = force_jalali or (not force_gregorian and JALALI_YEAR_THRESHOLD_MIN <= y <= JALALI_YEAR_THRESHOLD_MAX)
         
         try:
             if is_jalali:

@@ -188,15 +188,17 @@ class JalaaliService(models.AbstractModel):
 
     @api.model
     def get_current_jalali_date(self):
-        """Get current date in Jalali format."""
+        """Get current date in Jalali format with Persian weekday name."""
         today = jdatetime.date.today()
+        # Get Persian weekday name using mixin's helper method
+        weekday_name = self.env['jalaali.mixin'].get_jalali_weekday_name(today.weekday())
         return {
             'year': today.year,
             'month': today.month,
             'day': today.day,
             'formatted': f"{today.year}/{today.month:02d}/{today.day:02d}",
-            'weekday': today.strftime('%A'),
-            'full_formatted': today.strftime('%Y/%m/%d - %A')
+            'weekday': weekday_name,
+            'full_formatted': f"{today.year}/{today.month:02d}/{today.day:02d} - {weekday_name}"
         }
 
     @api.model
@@ -222,13 +224,13 @@ class JalaaliService(models.AbstractModel):
             working_days = 0
             
             for day in range(1, last_day + 1):
-                # Check if weekend (Friday = 4 in jdatetime)
+                # Check if weekend (Friday = 6 in jdatetime weekday convention where 0=Saturday)
                 try:
                     j_date = jdatetime.date(year, month, day)
-                    weekday = j_date.weekday()  # 0=Saturday, 6=Friday
+                    weekday = j_date.weekday()  # 0=Saturday, 1=Sunday, ..., 6=Friday
                     
-                    # Friday is weekend
-                    if weekday == 4:  # Friday
+                    # Friday is weekend (weekday == 6 in jdatetime convention)
+                    if weekday == 6:  # Friday
                         holidays.append({
                             'day': day,
                             'reason': 'Weekend (Friday)'
@@ -258,9 +260,9 @@ class JalaaliService(models.AbstractModel):
             _logger.error("Error calculating working days: %s", e)
             return None
 
-    @staticmethod
+    @api.model
     @ormcache('year', 'month', 'day')
-    def _jalali_to_gregorian_safe(year, month, day):
+    def _jalali_to_gregorian_safe(self, year, month, day):
         """Cached safe conversion with error handling using Odoo's ormcache."""
         try:
             j_date = jdatetime.date(year, month, day)

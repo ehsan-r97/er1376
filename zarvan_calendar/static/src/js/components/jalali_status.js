@@ -34,6 +34,7 @@ export class JalaliStatus extends Component {
         onWillUnmount(() => {
             if (intervalId) {
                 clearInterval(intervalId);
+                intervalId = null;
             }
         });
     }
