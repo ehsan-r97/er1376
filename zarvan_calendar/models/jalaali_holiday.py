@@ -28,7 +28,12 @@ class JalaaliHoliday(models.Model):
     name = fields.Char(string='Holiday Name', required=True, translate=True)
     
     # Jalali Date Fields
-    jalali_year = fields.Integer(string='Jalali Year', required=True, index=True)
+    jalali_year = fields.Integer(
+        string='Jalali Year', 
+        required=False,  # Optional: NULL means "Every Year" for fixed holidays
+        index=True,
+        help="Leave empty for fixed holidays that occur every year (e.g., Nowruz). Required for lunar holidays."
+    )
     jalali_month = fields.Integer(string='Jalali Month', required=True, index=True)
     jalali_day = fields.Integer(string='Jalali Day', required=True, index=True)
     
@@ -80,14 +85,21 @@ class JalaaliHoliday(models.Model):
     
     @api.depends('jalali_year', 'jalali_month', 'jalali_day')
     def _compute_gregorian_date(self):
-        """Compute Gregorian date from Jalali date."""
+        """Compute Gregorian date from Jalali date.
+        
+        For fixed holidays (jalali_year is NULL), computes the Gregorian date
+        for the current year only. This field will be updated annually.
+        """
         jalaali_mixin = self.env['jalaali.mixin']
+        current_jalali_year = jalaali_mixin.get_current_jalali_year()
         
         for record in self:
-            if record.jalali_year and record.jalali_month and record.jalali_day:
+            year_to_use = record.jalali_year if record.jalali_year else current_jalali_year
+            
+            if year_to_use and record.jalali_month and record.jalali_day:
                 try:
                     g_date = jalaali_mixin.jalali_to_gregorian(
-                        record.jalali_year,
+                        year_to_use,
                         record.jalali_month,
                         record.jalali_day
                     )
@@ -95,7 +107,7 @@ class JalaaliHoliday(models.Model):
                 except Exception as e:
                     _logger.warning(
                         "Could not compute Gregorian date for %d-%02d-%02d: %s",
-                        record.jalali_year, record.jalali_month, record.jalali_day, e
+                        year_to_use, record.jalali_month, record.jalali_day, e
                     )
                     record.gregorian_date = False
             else:
@@ -107,17 +119,20 @@ class JalaaliHoliday(models.Model):
         jalaali_mixin = self.env['jalaali.mixin']
         
         for record in self:
-            if not jalaali_mixin.validate_jalali_date(
-                record.jalali_year, record.jalali_month, record.jalali_day
-            ):
-                raise ValidationError(_(
-                    "Invalid Jalali date: %(year)d-%(month)02d-%(day)02d. "
-                    "Please verify the date components."
-                ) % {
-                    'year': record.jalali_year,
-                    'month': record.jalali_month,
-                    'day': record.jalali_day
-                })
+            # Only validate if year is provided (lunar holidays)
+            # Fixed holidays (year=NULL) are always valid
+            if record.jalali_year:
+                if not jalaali_mixin.validate_jalali_date(
+                    record.jalali_year, record.jalali_month, record.jalali_day
+                ):
+                    raise ValidationError(_(
+                        "Invalid Jalali date: %(year)d-%(month)02d-%(day)02d. "
+                        "Please verify the date components."
+                    ) % {
+                        'year': record.jalali_year,
+                        'month': record.jalali_month,
+                        'day': record.jalali_day
+                    })
 
     @api.constrains('holiday_type', 'company_id')
     def _check_company_specific_holidays(self):
