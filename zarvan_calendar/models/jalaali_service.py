@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from odoo import models, api, _
 from odoo.exceptions import UserError
+from odoo.tools import ormcache
 import logging
-from functools import lru_cache
 
 _logger = logging.getLogger(__name__)
 
@@ -38,17 +38,31 @@ class JalaaliService(models.AbstractModel):
         if jalali_year is None:
             jalali_year = jdatetime.date.today().year
         
-        domain = [('active', '=', True)]
+        domain = [('is_active', '=', True)]
         
-        # Fixed holidays (apply every year)
+        # Fixed holidays (apply every year) - include global and company-specific
         fixed_domain = domain + [('holiday_type', '=', 'fixed')]
+        if company_id:
+            fixed_domain.append('|')
+            fixed_domain.append(('company_id', '=', company_id))
+            fixed_domain.append(('company_id', '=', False))
+        else:
+            fixed_domain.append(('company_id', '=', False))
+        
         fixed_holidays = self.env['jalaali.holiday'].search(fixed_domain)
         
         # Lunar holidays for specific year
         lunar_domain = domain + [
             ('holiday_type', '=', 'lunar'),
-            ('jalali_year', '=', jalali_year)
+            ('jalali_year', '=', jalali_year),
         ]
+        if company_id:
+            lunar_domain.append('|')
+            lunar_domain.append(('company_id', '=', company_id))
+            lunar_domain.append(('company_id', '=', False))
+        else:
+            lunar_domain.append(('company_id', '=', False))
+        
         lunar_holidays = self.env['jalaali.holiday'].search(lunar_domain)
         
         results = []
@@ -65,11 +79,11 @@ class JalaaliService(models.AbstractModel):
                     'jalali_date': f"{jalali_year}/{holiday.jalali_month:02d}/{holiday.jalali_day:02d}",
                     'gregorian_date': gregorian.strftime('%Y-%m-%d') if gregorian else None,
                     'type': 'fixed',
-                    'is_national': holiday.is_national,
+                    'is_national': getattr(holiday, 'is_national', False),
                     'company_id': holiday.company_id.name if holiday.company_id else None,
                 })
             except Exception as e:
-                _logger.warning(f"Error processing fixed holiday {holiday.name}: {e}")
+                _logger.warning("Error processing fixed holiday %s: %s", holiday.name, e)
         
         # Process lunar holidays
         for holiday in lunar_holidays:
@@ -83,11 +97,11 @@ class JalaaliService(models.AbstractModel):
                     'jalali_date': f"{holiday.jalali_year}/{holiday.jalali_month:02d}/{holiday.jalali_day:02d}",
                     'gregorian_date': gregorian.strftime('%Y-%m-%d') if gregorian else None,
                     'type': 'lunar',
-                    'is_national': holiday.is_national,
+                    'is_national': getattr(holiday, 'is_national', False),
                     'company_id': holiday.company_id.name if holiday.company_id else None,
                 })
             except Exception as e:
-                _logger.warning(f"Error processing lunar holiday {holiday.name}: {e}")
+                _logger.warning("Error processing lunar holiday %s: %s", holiday.name, e)
         
         # Sort by date
         results.sort(key=lambda x: x['jalali_date'])
@@ -102,37 +116,49 @@ class JalaaliService(models.AbstractModel):
         :return: dict with is_holiday boolean and holiday details if applicable
         """
         domain = [
-            ('active', '=', True),
+            ('is_active', '=', True),
             ('jalali_month', '=', jalali_month),
             ('jalali_day', '=', jalali_day),
         ]
         
         # Check fixed holidays
         fixed_domain = domain + [('holiday_type', '=', 'fixed')]
+        if company_id:
+            fixed_domain.append('|')
+            fixed_domain.append(('company_id', '=', company_id))
+            fixed_domain.append(('company_id', '=', False))
+        else:
+            fixed_domain.append(('company_id', '=', False))
+        
         fixed_holiday = self.env['jalaali.holiday'].search(fixed_domain, limit=1)
         
         if fixed_holiday:
-            if not fixed_holiday.company_id or fixed_holiday.company_id.id == company_id:
-                return {
-                    'is_holiday': True,
-                    'holiday': fixed_holiday.name,
-                    'type': 'fixed'
-                }
+            return {
+                'is_holiday': True,
+                'holiday': fixed_holiday.name,
+                'type': 'fixed'
+            }
         
         # Check lunar holidays for specific year
         lunar_domain = domain + [
             ('holiday_type', '=', 'lunar'),
             ('jalali_year', '=', jalali_year)
         ]
+        if company_id:
+            lunar_domain.append('|')
+            lunar_domain.append(('company_id', '=', company_id))
+            lunar_domain.append(('company_id', '=', False))
+        else:
+            lunar_domain.append(('company_id', '=', False))
+        
         lunar_holiday = self.env['jalaali.holiday'].search(lunar_domain, limit=1)
         
         if lunar_holiday:
-            if not lunar_holiday.company_id or lunar_holiday.company_id.id == company_id:
-                return {
-                    'is_holiday': True,
-                    'holiday': lunar_holiday.name,
-                    'type': 'lunar'
-                }
+            return {
+                'is_holiday': True,
+                'holiday': lunar_holiday.name,
+                'type': 'lunar'
+            }
         
         return {'is_holiday': False, 'holiday': None, 'type': None}
 
@@ -157,7 +183,7 @@ class JalaaliService(models.AbstractModel):
             j_date = jdatetime.GregorianToJalali(g_date)
             return (j_date.jyear, j_date.jmonth, j_date.jday)
         except Exception as e:
-            _logger.error(f"Gregorian to Jalali conversion error: {e}")
+            _logger.error("Gregorian to Jalali conversion error: %s", e)
             return None
 
     @api.model
@@ -181,9 +207,9 @@ class JalaaliService(models.AbstractModel):
         :return: dict with working_days count and list of holiday dates
         """
         try:
-            # Get last day of month
+            # Get last day of month using jdatetime's native isleap function
             if month == 12:
-                if self._is_leap_year(year):
+                if jdatetime.jalali.isleap(year):
                     last_day = 30
                 else:
                     last_day = 29
@@ -229,26 +255,24 @@ class JalaaliService(models.AbstractModel):
                 'holiday_count': len(holidays)
             }
         except Exception as e:
-            _logger.error(f"Error calculating working days: {e}")
+            _logger.error("Error calculating working days: %s", e)
             return None
 
     @staticmethod
-    @lru_cache(maxsize=366)
+    @ormcache('year', 'month', 'day')
     def _jalali_to_gregorian_safe(year, month, day):
-        """Cached safe conversion with error handling."""
+        """Cached safe conversion with error handling using Odoo's ormcache."""
         try:
             j_date = jdatetime.date(year, month, day)
             return j_date.togregorian()
         except Exception as e:
-            _logger.warning(f"Invalid Jalali date {year}/{month}/{day}: {e}")
+            _logger.warning("Invalid Jalali date %s/%s/%s: %s", year, month, day, e)
             return None
 
     @staticmethod
     def _is_leap_year(year):
-        """Check if a Jalali year is a leap year."""
-        # Jalali leap year cycle (33-year cycle with occasional 29-year subcycles)
-        remainder = year % 33
-        return remainder in [1, 5, 9, 13, 17, 22, 26, 30]
+        """Check if a Jalali year is a leap year using jdatetime's native function."""
+        return jdatetime.jalali.isleap(year)
 
     @api.model
     def generate_holiday_report(self, year_from, year_to, format='json'):

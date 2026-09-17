@@ -79,6 +79,10 @@ class ResCompany(models.Model):
         """
         company = self.browse(company_id) if company_id else self.env.company
         
+        # Validate company exists
+        if not company:
+            raise UserError(_("Company not found."))
+        
         return {
             'fiscal_year_start': company.jalali_fiscal_year_start,
             'fiscal_year_month': company.jalali_fiscal_year_month,
@@ -100,6 +104,10 @@ class ResCompany(models.Model):
             bool: True if weekend, False otherwise
         """
         from datetime import datetime
+        
+        # Guard against empty recordsets before ensure_one()
+        if not self:
+            return False
         
         if weekday is None:
             if isinstance(check_date, str):

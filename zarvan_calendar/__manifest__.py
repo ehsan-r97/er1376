@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Zarvan Persian Calendar',
-    'version': '19.0.2.0.0',
+    'version': '19.0.1.0.0',
     'category': 'Localization/Iran',
     'summary': 'Production-ready Jalali (Persian) calendar with holidays for 1400-1410, REST API, and multi-company support',
     'description': """
@@ -19,7 +19,7 @@ Features:
 * Advanced import wizard for CSV/Excel holiday data
 * RESTful API for external integrations
 * OWL 2.0 components for modern UI
-* Thread-safe operations with LRU caching
+* Thread-safe operations with ORM caching
 * Compatible with Redis, Nginx, PgBouncer infrastructure
 
 API Endpoints:
@@ -39,7 +39,7 @@ Infrastructure Ready:
 * Docker deployment supported
 * Multi-worker Odoo compatible
     """,
-    'author': 'Ehsan Rostami',
+    'author': 'Ehsan Rezaei',
     'website': 'https://github.com/ehsan-r97/Odoo19Custom_Addons',
     'license': 'LGPL-3',
     'depends': ['base', 'web'],
@@ -63,16 +63,16 @@ Infrastructure Ready:
         ],
     },
     'external_dependencies': {
-        'python': ['jdatetime>=4.1.0', 'pandas', 'openpyxl'],
+        'python': ['jdatetime>=4.1.0', 'openpyxl'],
     },
     'installable': True,
     'application': False,
     'auto_install': False,
     'post_init_hook': 'post_init_hook',
     'uninstall_hook': 'uninstall_hook',
-    'maintainer': 'Ehsan Rostami',
+    'maintainer': 'Ehsan Rezaei',
     'images': ['static/description/icon.png'],
     'price': 0,
     'currency': 'EUR',
-    'support': 'ehsan.r97@example.com',
+    'support': 'ehsan.r97@gmail.com',
 }

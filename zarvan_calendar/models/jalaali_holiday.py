@@ -79,6 +79,10 @@ class JalaaliHoliday(models.Model):
     is_active = fields.Boolean(string='Active', default=True, index=True)
     description = fields.Text(string='Description', translate=True)
     
+    # National holiday flag
+    is_national = fields.Boolean(string='National Holiday', default=False, index=True,
+        help="Check this if it's an official national holiday")
+    
     # Metadata
     created_by = fields.Many2one('res.users', string='Created By', readonly=True)
     updated_by = fields.Many2one('res.users', string='Updated By', readonly=True)

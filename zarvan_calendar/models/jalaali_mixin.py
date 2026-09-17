@@ -11,8 +11,8 @@ KEY PRODUCTION FEATURES:
 - Multiple input format support (YYYY-MM-DD, YYYY/MM/DD, YYYYMMDD)
 - AUTO-DETECTION: Automatically detects Jalali vs Gregorian in imports
 - Comprehensive validation with detailed error messages
-- LRU caching for frequently used conversions (<5ms response)
-- Timezone-aware conversions to prevent DST errors
+- ORM caching for frequently used conversions (<5ms response)
+- Timezone-naive Date field handling to prevent DST errors
 - Logging for debugging and monitoring
 
 USAGE IN OTHER MODULES:
@@ -25,24 +25,21 @@ import logging
 import re
 from datetime import datetime, date
 from functools import lru_cache
-from threading import Lock
-import pytz
 
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError, UserError
+from odoo.tools import ormcache
 
 _logger = logging.getLogger(__name__)
-
-# Thread-safe lock for cache operations
-_cache_lock = Lock()
 
 # Pre-compiled regex patterns for performance
 _DATE_PATTERN_1 = re.compile(r'^(\d{4})-(\d{2})-(\d{2})$')  # YYYY-MM-DD
 _DATE_PATTERN_2 = re.compile(r'^(\d{4})/(\d{2})/(\d{2})$')  # YYYY/MM/DD
 _DATE_PATTERN_3 = re.compile(r'^(\d{4})(\d{2})(\d{2})$')    # YYYYMMDD
 
-# Heuristic threshold: Years > 1300 are likely Jalali (1300 SH = 1921 AD)
-JALALI_YEAR_THRESHOLD = 1300
+# Heuristic threshold: Years > 1700 are likely Jalali (1700 SH = 2321 AD, safe upper bound)
+# Years <= 1700 are treated as Gregorian to avoid misclassification
+JALALI_YEAR_THRESHOLD = 1700
 
 
 class JalaaliMixin(models.AbstractModel):
@@ -50,16 +47,18 @@ class JalaaliMixin(models.AbstractModel):
     _description = 'Persian Calendar Conversion Mixin'
 
     @api.model
-    @lru_cache(maxsize=1024)
-    def jalali_to_gregorian(self, j_year, j_month, j_day, tz_name=None):
+    def jalali_to_gregorian(self, j_year, j_month, j_day):
         """
-        Convert Jalali date to Gregorian date with timezone safety.
+        Convert Jalali date to Gregorian date.
+        
+        IMPORTANT: Returns a naive datetime.date object.
+        Timezone handling should ONLY be applied to fields.Datetime fields,
+        not fields.Date which are timezone-naive in Odoo.
         
         Args:
             j_year: Jalali year (integer)
             j_month: Jalali month (1-12)
             j_day: Jalali day (1-31)
-            tz_name: Optional timezone string (e.g., 'Asia/Tehran')
         
         Returns:
             date: Gregorian date object
@@ -67,6 +66,12 @@ class JalaaliMixin(models.AbstractModel):
         Raises:
             ValidationError: If date is invalid
         """
+        return self._jalali_to_gregorian_cached(j_year, j_month, j_day)
+
+    @staticmethod
+    @ormcache('j_year', 'j_month', 'j_day')
+    def _jalali_to_gregorian_cached(j_year, j_month, j_day):
+        """Cached Jalali to Gregorian conversion using Odoo's ormcache."""
         try:
             import jdatetime
             
@@ -80,28 +85,15 @@ class JalaaliMixin(models.AbstractModel):
             elif j_month <= 11 and not (1 <= j_day <= 30):
                 raise ValidationError(_("Invalid Jalali day: %d for month %d. Must be between 1 and 30.") % (j_day, j_month))
             elif not (1 <= j_day <= 29):
-                # Check if it's a leap year
+                # Check if it's a leap year using jdatetime's native function
                 if not jdatetime.jalali.isleap(j_year):
                     raise ValidationError(_("Invalid Jalali day: %d for month %d in year %d. Must be between 1 and 29.") % (j_day, j_month, j_year))
             
-            # Create Jalali date
+            # Create Jalali date and convert to Gregorian
             j_date = jdatetime.date(j_year, j_month, j_day)
-            
-            # Convert to Gregorian
             g_date = j_date.togregorian()
             
-            # Timezone handling: Prevents off-by-one errors due to DST
-            if tz_name:
-                try:
-                    tz = pytz.timezone(tz_name)
-                    # Create datetime at noon to avoid DST boundary issues
-                    dt = datetime(g_date.year, g_date.month, g_date.day, 12, 0, 0)
-                    dt = tz.localize(dt) if hasattr(tz, 'localize') else tz.normalize(tz.localize(dt))
-                    return dt.date()
-                except Exception as e:
-                    _logger.warning("Timezone conversion failed for %s: %s", tz_name, e)
-                    # Fallback to naive date
-            
+            # Return naive date - NO timezone handling for Date fields
             return date(g_date.year, g_date.month, g_date.day)
             
         except ImportError:
@@ -112,16 +104,17 @@ class JalaaliMixin(models.AbstractModel):
             raise ValidationError(_("Date conversion failed: %s") % str(e))
 
     @api.model
-    @lru_cache(maxsize=1024)
-    def gregorian_to_jalali(self, g_year, g_month, g_day, tz_name=None):
+    def gregorian_to_jalali(self, g_year, g_month, g_day):
         """
-        Convert Gregorian date to Jalali date with timezone safety.
+        Convert Gregorian date to Jalali date.
+        
+        IMPORTANT: Works with naive datetime.date objects.
+        Timezone handling should ONLY be applied to fields.Datetime fields.
         
         Args:
             g_year: Gregorian year (integer)
             g_month: Gregorian month (1-12)
             g_day: Gregorian day (1-31)
-            tz_name: Optional timezone string (e.g., 'Asia/Tehran')
         
         Returns:
             tuple: (j_year, j_month, j_day)
@@ -129,22 +122,19 @@ class JalaaliMixin(models.AbstractModel):
         Raises:
             ValidationError: If date is invalid
         """
+        return self._gregorian_to_jalali_cached(g_year, g_month, g_day)
+
+    @staticmethod
+    @ormcache('g_year', 'g_month', 'g_day')
+    def _gregorian_to_jalali_cached(g_year, g_month, g_day):
+        """Cached Gregorian to Jalali conversion using Odoo's ormcache."""
         try:
             import jdatetime
             
             # Validate Gregorian date first
             g_date = date(g_year, g_month, g_day)
             
-            # Timezone handling
-            if tz_name:
-                try:
-                    tz = pytz.timezone(tz_name)
-                    dt = datetime(g_year, g_month, g_day, 12, 0, 0)
-                    dt = tz.localize(dt) if hasattr(tz, 'localize') else tz.normalize(tz.localize(dt))
-                    g_date = dt.date()
-                except Exception as e:
-                    _logger.warning("Timezone conversion failed for %s: %s", tz_name, e)
-            
+            # Convert to Jalali - NO timezone handling for Date fields
             j_date = jdatetime.date.fromgregorian(date=g_date)
             return (j_date.year, j_date.month, j_date.day)
             
@@ -158,13 +148,13 @@ class JalaaliMixin(models.AbstractModel):
             raise ValidationError(_("Date conversion failed: %s") % str(e))
 
     @api.model
-    def detect_and_parse_date(self, date_string, force_jalali=False, force_gregorian=False, tz_name=None):
+    def detect_and_parse_date(self, date_string, force_jalali=False, force_gregorian=False):
         """
         PRODUCTION FEATURE: Auto-detect Jalali vs Gregorian and parse.
         
         HEURISTIC RULE:
-        - If year > 1300 → Assume Jalali (1300 SH = 1921 AD)
-        - If year <= 1300 → Assume Gregorian
+        - If year > 1700 → Assume Jalali (safe upper bound)
+        - If year <= 1700 → Assume Gregorian
         - Can be overridden with force_* flags
         
         SUPPORTED FORMATS:
@@ -175,7 +165,6 @@ class JalaaliMixin(models.AbstractModel):
             date_string: String representation of date
             force_jalali: Force interpretation as Jalali
             force_gregorian: Force interpretation as Gregorian
-            tz_name: Timezone for conversion safety
         
         Returns:
             dict: {
@@ -212,8 +201,8 @@ class JalaaliMixin(models.AbstractModel):
         
         try:
             if is_jalali:
-                # Validate and convert Jalali
-                g_date = self.jalali_to_gregorian(y, m, d, tz_name=tz_name)
+                # Validate and convert Jalali (no tz_name parameter anymore)
+                g_date = self.jalali_to_gregorian(y, m, d)
                 return {
                     'success': True,
                     'gregorian_date': g_date,
@@ -223,9 +212,6 @@ class JalaaliMixin(models.AbstractModel):
             else:
                 # Validate Gregorian
                 g_date = date(y, m, d)
-                if tz_name:
-                    # Apply timezone normalization if needed
-                    pass
                 return {
                     'success': True,
                     'gregorian_date': g_date,
@@ -334,7 +320,7 @@ class JalaaliMixin(models.AbstractModel):
         return weekdays.get(weekday % 7, '')
 
     @api.model
-    def process_import_rows_with_dates(self, rows, date_columns=None, tz_name=None):
+    def process_import_rows_with_dates(self, rows, date_columns=None):
         """
         PRODUCTION FEATURE: Process import rows with automatic date detection.
         
@@ -345,7 +331,6 @@ class JalaaliMixin(models.AbstractModel):
             date_columns: List of field names that may contain dates
                          Default: ['date', 'date_order', 'start_date', 'end_date', 
                                    'invoice_date', 'due_date', 'birth_date']
-            tz_name: Timezone for safe conversion (default: user's timezone)
         
         Returns:
             dict: {
@@ -392,7 +377,7 @@ class JalaaliMixin(models.AbstractModel):
             
             for field_name, value in row.items():
                 if field_name in date_columns and value:
-                    result = self.detect_and_parse_date(str(value), tz_name=tz_name)
+                    result = self.detect_and_parse_date(str(value))
                     
                     if result['success']:
                         converted_row[field_name] = result['gregorian_date']

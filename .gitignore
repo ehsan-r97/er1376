@@ -1,6 +1,26 @@
 ```
-__pycache__/
+# Odoo specific ignores
 *.pyc
+__pycache__/
 *.pyo
 *.pyd
+
+# Build artifacts
+*.pot
+*.po
+*~
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+*.env.*
+
+# Logs
+*.log
+
+# Dependencies
+*.egg-info/
+.eggs/
 ```
