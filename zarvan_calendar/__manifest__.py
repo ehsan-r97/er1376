@@ -42,7 +42,7 @@ Infrastructure Ready:
     'author': 'Ehsan Rezaei',
     'website': 'https://github.com/ehsan-r97/Odoo19Custom_Addons',
     'license': 'LGPL-3',
-    'depends': ['base', 'web'],
+    'depends': ['base', 'web', 'mail'],
     'data': [
         'security/jalaali_security.xml',
         'security/ir.model.access.csv',
