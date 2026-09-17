@@ -1,1 +1,54 @@
-Nothing needs to be added to .gitignore since only a single XML view file was modified and no build artifacts, dependencies, or temporary files were detected in the changes.
+```
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pyc
+*.py~
+.Python
+env/
+venv/
+.venv/
+.env
+.env.local
+.env.*
+
+# Build and distribution artifacts
+build/
+dist/
+*.egg
+*.egg-info/
+*.so
+*.dylib
+*.dll
+
+# Testing
+.coverage
+coverage/
+htmlcov/
+.pytest_cache/
+.tox/
+
+# Logs
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.tmp
+
+# Odoo specific
+*.pot
+*.po
+*i18n/
+*static/src/css/
+*static/src/js/
+*static/src/xml/
+```

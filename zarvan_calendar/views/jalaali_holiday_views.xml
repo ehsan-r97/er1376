@@ -1,109 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
-        <!-- Holiday List View -->
-        <record id="jalaali_holiday_view_tree" model="ir.ui.view">
-            <field name="name">jalaali.holiday.view.tree</field>
-            <field name="model">jalaali.holiday</field>
-            <field name="arch" type="xml">
-                <list string="Holidays" decoration-info="holiday_type=='fixed'" decoration-warning="holiday_type=='lunar'">
-                    <field name="name"/>
-                    <field name="jalali_year"/>
-                    <field name="jalali_month"/>
-                    <field name="jalali_day"/>
-                    <field name="gregorian_date"/>
-                    <field name="holiday_type"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="is_active"/>
-                </list>
-            </field>
-        </record>
+    <!-- List View (Odoo 19 Standard) -->
+    <record id="jalaali_holiday_view_list" model="ir.ui.view">
+        <field name="name">jalaali.holiday.view.list</field>
+        <field name="model">jalaali.holiday</field>
+        <field name="arch" type="xml">
+            <list string="Holidays" editable="bottom">
+                <field name="name"/>
+                <field name="jalali_year"/>
+                <field name="jalali_month"/>
+                <field name="jalali_day"/>
+                <field name="gregorian_date"/>
+                <field name="holiday_type"/>
+                <field name="is_national"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="is_active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
 
-        <!-- Holiday Form View -->
-        <record id="jalaali_holiday_view_form" model="ir.ui.view">
-            <field name="name">jalaali.holiday.view.form</field>
-            <field name="model">jalaali.holiday</field>
-            <field name="arch" type="xml">
-                <form string="Holiday">
-                    <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
-                                <field name="is_active" widget="boolean_button" options='{"terminology": "archive"}'/>
-                            </button>
-                        </div>
-                        <div class="oe_title">
-                            <h1>
-                                <field name="name" placeholder="Holiday Name"/>
-                            </h1>
-                        </div>
-                        <group>
-                            <group string="Jalali Date">
-                                <field name="jalali_year"/>
-                                <field name="jalali_month"/>
-                                <field name="jalali_day"/>
-                            </group>
-                            <group string="Details">
-                                <field name="gregorian_date"/>
-                                <field name="holiday_type"/>
-                                <field name="company_id" groups="base.group_multi_company"/>
-                            </group>
+    <!-- Form View -->
+    <record id="jalaali_holiday_view_form" model="ir.ui.view">
+        <field name="name">jalaali.holiday.view.form</field>
+        <field name="model">jalaali.holiday</field>
+        <field name="arch" type="xml">
+            <form string="Holiday Details">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                            <field name="is_active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name" placeholder="e.g., Nowruz"/></h1>
+                        <field name="display_name" invisible="1"/>
+                    </div>
+                    <group>
+                        <group string="Jalali Date">
+                            <field name="jalali_year"/>
+                            <field name="jalali_month"/>
+                            <field name="jalali_day"/>
                         </group>
-                        <group string="Description">
-                            <field name="description" nolabel="1" colspan="2"/>
+                        <group string="Details">
+                            <field name="gregorian_date"/>
+                            <field name="holiday_type"/>
+                            <field name="is_national"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
                         </group>
-                        <group string="Metadata" groups="base.group_no_one">
-                            <field name="created_by"/>
-                            <field name="updated_by"/>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-        <!-- Holiday Search View -->
-        <record id="jalaali_holiday_view_search" model="ir.ui.view">
-            <field name="name">jalaali.holiday.view.search</field>
-            <field name="model">jalaali.holiday</field>
-            <field name="arch" type="xml">
-                <search string="Search Holidays">
-                    <field name="name"/>
-                    <field name="jalali_year"/>
-                    <field name="jalali_month"/>
-                    <field name="jalali_day"/>
-                    <field name="gregorian_date"/>
-                    <filter string="This Year" name="this_year" domain="[('jalali_year', '=', context_today().year)]"/>
-                    <filter string="Next Month" name="next_month" domain="[('gregorian_date', '&gt;', context_today()), ('gregorian_date', '&lt;=', (context_today() + datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]"/>
-                    <separator/>
-                    <filter string="Fixed Dates" name="fixed" domain="[('holiday_type', '=', 'fixed')]"/>
-                    <filter string="Lunar/Islamic" name="lunar" domain="[('holiday_type', '=', 'lunar')]"/>
-                    <filter string="National" name="national" domain="[('holiday_type', '=', 'national')]"/>
-                    <separator/>
-                    <filter string="Archived" name="inactive" domain="[('is_active', '=', False)]"/>
-                    <group expand="0" string="Group By">
-                        <filter string="Year" name="group_year" context="{'group_by': 'jalali_year'}"/>
-                        <filter string="Month" name="group_month" context="{'group_by': 'jalali_month'}"/>
-                        <filter string="Type" name="group_type" context="{'group_by': 'holiday_type'}"/>
-                        <filter string="Company" name="group_company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                     </group>
-                </search>
-            </field>
-        </record>
+                    <notebook>
+                        <page string="Description" name="description_page">
+                            <field name="description" placeholder="Add detailed description here..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
 
-        <!-- Holiday Action -->
-        <record id="jalaali_holiday_action" model="ir.actions.act_window">
-            <field name="name">Holidays</field>
-            <field name="res_model">jalaali.holiday</field>
-            <field name="view_mode">tree,form</field>
-            <field name="search_view_id" ref="jalaali_holiday_view_search"/>
-            <field name="context">{'search_default_this_year': 1}</field>
-            <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
-                    Create your first holiday
-                </p>
-                <p>
-                    Manage Persian calendar holidays including national, religious, and company-specific events.
-                </p>
-            </field>
-        </record>
-    </data>
+    <!-- Search View (Odoo 19 Compliant) -->
+    <record id="jalaali_holiday_view_search" model="ir.ui.view">
+        <field name="name">jalaali.holiday.view.search</field>
+        <field name="model">jalaali.holiday</field>
+        <field name="arch" type="xml">
+            <search string="Search Holidays">
+                <field name="name" filter_domain="[('name', 'ilike', self)]"/>
+                <field name="jalali_year"/>
+                <field name="gregorian_date"/>
+                <filter string="National Holidays" name="filter_national" domain="[('is_national', '=', True)]"/>
+                <filter string="Active" name="filter_active" domain="[('is_active', '=', True)]"/>
+                
+                <!-- FIXED: Replaced <group> with <separator> -->
+                <separator string="Group By"/>
+                <filter string="Year" name="groupby_year" context="{'group_by': 'jalali_year'}"/>
+                <filter string="Month" name="groupby_month" context="{'group_by': 'jalali_month'}"/>
+                <filter string="Type" name="groupby_type" context="{'group_by': 'holiday_type'}"/>
+                <filter string="Company" name="groupby_company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="jalaali_holiday_action" model="ir.actions.act_window">
+        <field name="name">Holidays</field>
+        <field name="res_model">jalaali.holiday</field>
+        <!-- FIXED: view_mode uses 'list' instead of 'tree' -->
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="jalaali_holiday_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Jalali Holiday
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="menu_jalaali_holiday_main" name="Holidays" parent="menu_jalaali_calendar_root" action="jalaali_holiday_action" sequence="10"/>
 </odoo>
