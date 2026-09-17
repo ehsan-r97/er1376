@@ -21,7 +21,8 @@
             <field name="jalali_month">1</field>
             <field name="jalali_day">1</field>
             <field name="holiday_type">fixed</field>
-            <field name="is_active">True</field>
+            <field name="is_national" eval="True"/>
+            <field name="is_active" eval="True"/>
         </record>
         
         <record id="holiday_nowruz_2" model="jalaali.holiday">
@@ -29,7 +30,8 @@
             <field name="jalali_month">1</field>
             <field name="jalali_day">2</field>
             <field name="holiday_type">fixed</field>
-            <field name="is_active">True</field>
+            <field name="is_national" eval="True"/>
+            <field name="is_active" eval="True"/>
         </record>
         
         <record id="holiday_nowruz_3" model="jalaali.holiday">
@@ -37,7 +39,8 @@
             <field name="jalali_month">1</field>
             <field name="jalali_day">3</field>
             <field name="holiday_type">fixed</field>
-            <field name="is_active">True</field>
+            <field name="is_national" eval="True"/>
+            <field name="is_active" eval="True"/>
         </record>
         
         <record id="holiday_nowruz_4" model="jalaali.holiday">
@@ -45,7 +48,8 @@
             <field name="jalali_month">1</field>
             <field name="jalali_day">4</field>
             <field name="holiday_type">fixed</field>
-            <field name="is_active">True</field>
+            <field name="is_national" eval="True"/>
+            <field name="is_active" eval="True"/>
         </record>
 
         <!-- 13th Day of Nature (Sizdah Bedar) -->
@@ -54,7 +58,8 @@
             <field name="jalali_month">1</field>
             <field name="jalali_day">13</field>
             <field name="holiday_type">fixed</field>
-            <field name="is_active">True</field>
+            <field name="is_national" eval="True"/>
+            <field name="is_active" eval="True"/>
         </record>
 
         <!-- Imam Khomeini Death (14 Khordad) -->
@@ -63,7 +68,8 @@
             <field name="jalali_month">3</field>
             <field name="jalali_day">14</field>
             <field name="holiday_type">fixed</field>
-            <field name="is_active">True</field>
+            <field name="is_national" eval="True"/>
+            <field name="is_active" eval="True"/>
         </record>
 
         <!-- Khordad Uprising (15 Khordad) -->
@@ -72,7 +78,8 @@
             <field name="jalali_month">3</field>
             <field name="jalali_day">15</field>
             <field name="holiday_type">fixed</field>
-            <field name="is_active">True</field>
+            <field name="is_national" eval="True"/>
+            <field name="is_active" eval="True"/>
         </record>
 
         <!-- Martyrdom of Dr. Beheshti (7 Tir) -->
@@ -81,7 +88,8 @@
             <field name="jalali_month">4</field>
             <field name="jalali_day">7</field>
             <field name="holiday_type">fixed</field>
-            <field name="is_active">True</field>
+            <field name="is_national" eval="True"/>
+            <field name="is_active" eval="True"/>
         </record>
 
         <!-- Student Day (16 Azar) -->
@@ -90,7 +98,8 @@
             <field name="jalali_month">9</field>
             <field name="jalali_day">16</field>
             <field name="holiday_type">fixed</field>
-            <field name="is_active">True</field>
+            <field name="is_national" eval="True"/>
+            <field name="is_active" eval="True"/>
         </record>
 
         <!-- Revolution Day (22 Bahman) -->
@@ -99,7 +108,8 @@
             <field name="jalali_month">11</field>
             <field name="jalali_day">22</field>
             <field name="holiday_type">fixed</field>
-            <field name="is_active">True</field>
+            <field name="is_national" eval="True"/>
+            <field name="is_active" eval="True"/>
         </record>
 
         <!-- Oil Nationalization (29 Esfand) -->
@@ -108,7 +118,8 @@
             <field name="jalali_month">12</field>
             <field name="jalali_day">29</field>
             <field name="holiday_type">fixed</field>
-            <field name="is_active">True</field>
+            <field name="is_national" eval="True"/>
+            <field name="is_active" eval="True"/>
         </record>
 
         <!-- ======================= -->

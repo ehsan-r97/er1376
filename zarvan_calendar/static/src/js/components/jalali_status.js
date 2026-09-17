@@ -1,14 +1,15 @@
 /** @odoo-module **/
 
-import { Component, useState, onMounted } from "@odoo/owl";
+import { Component, useState, onMounted, onWillUnmount } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 
 /**
- * Jalali Status Bar Component
+ * Jalali Status Bar Component - Production Ready
  * 
  * Displays current Jalali date in the status bar.
  * Updates automatically and shows Persian date alongside Gregorian.
+ * Properly cleans up interval on component unmount to prevent memory leaks.
  */
 export class JalaliStatus extends Component {
     static template = "zarvan_calendar.JalaliStatus";
@@ -21,10 +22,19 @@ export class JalaliStatus extends Component {
             isLoading: true,
         });
         
+        let intervalId = null;
+        
         onMounted(async () => {
             await this.updateDate();
             // Update every minute
-            setInterval(() => this.updateDate(), 60000);
+            intervalId = setInterval(() => this.updateDate(), 60000);
+        });
+        
+        // Clean up interval on component unmount to prevent memory leaks
+        onWillUnmount(() => {
+            if (intervalId) {
+                clearInterval(intervalId);
+            }
         });
     }
     
