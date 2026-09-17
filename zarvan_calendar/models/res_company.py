@@ -12,7 +12,7 @@ class ResCompany(models.Model):
         ('custom', 'Custom Days')
     ], string='Weekend Type', default='thu_fri')
     
-    jalali_weekend_custom = fields.Many2many('jalaali.weekend.day', string='Custom Weekend Days')
+    jalali_weekend_custom = fields.Char(string='Custom Weekend Days', help="Comma-separated Jalali weekday numbers (0=Sat to 6=Fri). Example: '5,6'")
 
     def is_weekend(self, check_date, weekday=None, company_id=None):
         """Checks if a given date is a weekend for a specific company."""
@@ -39,7 +39,8 @@ class ResCompany(models.Model):
         elif company.jalali_weekend_type == 'thu_fri':
             return weekday in (5, 6)
         elif company.jalali_weekend_type == 'custom' and company.jalali_weekend_custom:
-            # FIXED: Read from 'company' object, not 'self'
-            return weekday in company.jalali_weekend_custom.mapped('day_number')
+            # FIXED: Parse comma-separated string instead of relational field
+            custom_days = [int(d.strip()) for d in company.jalali_weekend_custom.split(',')]
+            return weekday in custom_days
         
         return False
