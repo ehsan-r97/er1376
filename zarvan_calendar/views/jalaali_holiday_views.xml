@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <!-- Holiday Tree View -->
+        <!-- Holiday List View -->
         <record id="jalaali_holiday_view_tree" model="ir.ui.view">
             <field name="name">jalaali.holiday.view.tree</field>
             <field name="model">jalaali.holiday</field>
             <field name="arch" type="xml">
-                <tree string="Holidays" decoration-info="holiday_type=='fixed'" decoration-warning="holiday_type=='lunar'">
+                <list string="Holidays" decoration-info="holiday_type=='fixed'" decoration-warning="holiday_type=='lunar'">
                     <field name="name"/>
                     <field name="jalali_year"/>
                     <field name="jalali_month"/>
@@ -15,7 +15,7 @@
                     <field name="holiday_type"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="is_active"/>
-                </tree>
+                </list>
             </field>
         </record>
 
